@@ -16,7 +16,7 @@ Function Part2 {
     while ($true) {
         for ($i = 0; $i -lt $array.Length; $i++) {
             $counter += $array[$i]
-            if (-not($setofvalues.Add($counter))){
+            if (-not($setofvalues.Add($counter))) {
                 write-host $counter
                 exit
             }
