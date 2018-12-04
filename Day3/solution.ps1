@@ -29,7 +29,6 @@ Function Part1 {
 
 Function Part2 {
     $fabric = New-Object 'object[,]' 1000, 1000
-    $clashcounter = 0
     for ($i = 0; $i -lt 1000; $i++) {
         for ($j = 0; $j -lt 1000; $j++) {
             $fabric[$i, $j] = '.'
@@ -50,7 +49,6 @@ Function Part2 {
                 }
                 elseif ($fabric[$x, $y] -eq '#') {
                     $fabric[$x, $y] = 'X'
-                    $clashcounter++
                     if ($traverse -eq 0) {
                         $causedclash = $true
                     }
