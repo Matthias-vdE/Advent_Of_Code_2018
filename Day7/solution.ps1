@@ -104,4 +104,80 @@ Function Part1 {
     write-host $answer
 }
 
+Function Part2 {
+    $workers = @{}
+    for ($i=0; $i -lt 5; $i++) {
+        $workers.Add($i, "Available")
+    }
+
+    $allWorkItems = @{}
+    $tickTock = 0
+    $input = Get-Content .\input.txt
+
+    $letters = 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+    foreach ($letter in $letters) {
+        $tmp = [PSCustomObject]@{
+            Name = $letter
+            Started = $false
+            Done = $false
+            DoneAt = -1
+            Requirement = [System.Collections.Generic.List[object]]::new()
+            Duration = 60 + [char]$letter-64
+        }
+        $allWorkItems[$letter] = $tmp
+    }
+
+    foreach ($line in $input) {
+        $split = $line -split ' '
+        $first = $split[1]
+        $second = $split[7]
+        $allWorkItems[$second].Requirement.Add($allWorkItems[$first])
+    }
+
+    $worktodo = [system.collections.generic.list[object]]::new()
+
+    while($allWorkItems.Values.Where{-not $_.Done}.Count -gt 0) {
+
+        $busyWorkers = $workers.Keys.Where{$workers[$_] -ne 'Available'}
+
+        foreach ($worker in $busyWorkers) {
+            $workitem = $workers[$worker]
+            if ($tickTock -gt $workitem.DoneAt) {
+                $workitem.Done = $true
+                $workers[$worker] = 'Available'
+            }
+        }
+
+        $tmpavailabletodo = [System.Collections.Generic.list[object]]::new()
+
+        foreach ($item in $($allWorkItems.Values)) {
+            if ($item.Requirement.Where{$_.Done -eq $false}.Count -gt 0) {
+
+            } else {
+                if (-not $item.Started -and -not $item.Done) {
+                    $tmpavailabletodo.add($item)
+                }
+            }
+        }
+
+        [array]$tmpavailabletodosortedcopy = $tmpavailabletodo | sort -property Name
+        $availableworkers = $workers.Keys.Where{$workers[$_] -eq 'Available'}
+        foreach ($availableworker in $availableworkers) {
+            if ($tmpavailabletodosortedcopy.Count -gt 0) {
+                $workitem = $tmpavailabletodosortedcopy[0]
+                $workitem.Started = $true
+                $workitem.DoneAt = $tickTock + $workitem.Duration - 1
+                $tmpavailabletodosortedcopy = $tmpavailabletodosortedcopy[1..($tmpavailabletodosortedcopy.Count)]
+                $workers[$availableworker] = $workitem
+                $worktodo.Add($workitem.Name)
+            }
+        }
+
+        $tickTock++
+    }
+    $answer = $tickTock - 1
+    write-host $answer
+}
+
 Part1
+Part2
