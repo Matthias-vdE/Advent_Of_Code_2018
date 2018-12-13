@@ -2,7 +2,7 @@
 
 Function Part1 {
     $grid = New-Object int[][] 300, 300
-    $gridSN = 5719 #This is the puzzle input
+    $gridSN = [int](Get-Content .\input.txt)
     foreach ($x in (0..299)) {
         foreach ($y in (0..299)) {
             $xCoordinate = $x + 1
@@ -43,7 +43,32 @@ Function Part1 {
 }
 
 Function Part2 {
-# FUCK THIS FUCKING SHIT
+    $grid = New-Object int[][] 300, 300
+    #$gridSN = [int](Get-Content .\input.txt)
+    $gridSN = 18
+    foreach ($x in (0..299)) {
+        foreach ($y in (0..299)) {
+            $xCoordinate = $x + 1
+            $yCoordinate = $y + 1
+            $rackID = $xCoordinate + 10
+            $powerLevel = $rackID * $yCoordinate
+            $powerLevel += $gridSN
+            $powerLevel *= $rackID
+            if ($powerLevel -lt 100) {
+                $hundreth = 0
+            }
+            else {
+                $string = [String]$powerlevel
+                $hundreth = $string.Substring($string.Length - 3, 1)
+                $hundreth = [int]$hundreth
+            }
+            $final = $hundreth - 5
+            $grid[$x][$y] = $final
+        }
+    }
+
+    $test = CalculatePatch $grid 89 268 16
+    write-host $test #should be 113.
 }
 
 Function CalculatePatch {
