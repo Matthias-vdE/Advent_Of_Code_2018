@@ -14,7 +14,7 @@ Function Part1 {
         $rulesHash.Add($split[0], $split[2]) | Out-Null
     }
 
-    $initialstate = '..' + $initialstate + '..........'
+    $initialstate = '....................' + $initialstate + '....................'
     write-host $initialstate
 
     $tmpCharArray = [char[]]$initialstate
