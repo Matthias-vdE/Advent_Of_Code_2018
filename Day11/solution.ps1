@@ -44,8 +44,7 @@ Function Part1 {
 
 Function Part2 {
     $grid = New-Object int[][] 300, 300
-    #$gridSN = [int](Get-Content .\input.txt)
-    $gridSN = 18
+    $gridSN = [int](Get-Content .\input.txt)
     foreach ($x in (0..299)) {
         foreach ($y in (0..299)) {
             $xCoordinate = $x + 1
@@ -66,9 +65,30 @@ Function Part2 {
             $grid[$x][$y] = $final
         }
     }
+    $largestX = -1
+    $largestY = -1
 
-    $test = CalculatePatch $grid 89 268 16
-    write-host $test #should be 113.
+    $largestPatch = -1
+    $largestPatchSize = -1
+
+    foreach ($x in (0..297)) {
+        foreach ($y in (0..297)) {
+            #Assume that the largest patch size won't be bigger than 20.
+            foreach ($i in (0..20)) {
+                $patchSum = CalculatePatch $grid $x $y $i
+                if ($patchSum -gt $largestPatch) {
+                    $largestX = $x + 1
+                    $largestY = $y + 1
+                    $largestPatch = $patchSum
+                    $largestPatchSize = $i
+                    write-host "$largestX,$largestY,$largestPatchSize"
+                }
+            }
+        }
+    }
+
+    write-host "$largestX,$largestY,$largestPatchSize"
+
 }
 
 Function CalculatePatch {
@@ -89,7 +109,7 @@ Function CalculatePatch {
     $sum = 0
     for ($i = 0; $i -lt $size; $i++) {
         for ($j = 0; $j -lt $size; $j++) {
-            $sum += $grid[$i][$j]
+            $sum += $grid[$x + $i][$y + $j]
         }
     }
     return $sum
