@@ -115,5 +115,5 @@ Function CalculatePatch {
     return $sum
 }
 
-#Part1
+Part1
 Part2
